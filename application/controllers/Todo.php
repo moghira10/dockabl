@@ -16,14 +16,21 @@ class Todo extends CI_Controller {
 		$response = $query->result();
 		if(!empty($response)) {
 			foreach ($response as $index => $task) {
-				$tasktodo = ($index+1)  . ". " . (string)$task->todo .PHP_EOL;
+				$tasktodo = ($index+1)  . ". " . (string)$task->todo . PHP_EOL;
 				$taskResp .= $tasktodo;
 			}
 		}
-		return $this->output
-			->set_content_type('application/json')
-			->set_status_header(200)
-			->set_output($taskResp);
+		if(!empty($taskResp)) {
+			return $this->output
+				->set_content_type('application/json')
+				->set_status_header(200)
+				->set_output($taskResp);
+		} else {
+			return $this->output
+				->set_content_type('application/json')
+				->set_status_header(200)
+				->set_output("No task to list!");
+		}
 	}
 
 	public function mark()
@@ -32,12 +39,20 @@ class Todo extends CI_Controller {
 		if(!empty($params)) {
 			$response = $this->db->query('DELETE FROM dock_todo WHERE `todo`="' . $params . '"');
 		}
-		if($response) {
+		if(!empty($response)) {
 			return $this->output
 				->set_content_type('application/json')
 				->set_status_header(200)
 				->set_output(
 					"Task Marked Sucessfully!"
+				);
+		} else {
+			syslog(LOG_ERR,"Error adding todo");
+			return $this->output
+				->set_content_type('application/json')
+				->set_status_header(500)
+				->set_output(
+					"Task could not be marked!"
 				);
 		}
 	}
@@ -47,12 +62,20 @@ class Todo extends CI_Controller {
 		if(!empty($params)) {
 			$response = $this->db->query('INSERT INTO dock_todo SET `todo`="' . $params . '"');
 		}
-		if($response) {
+		if(!empty($response)) {
 			return $this->output
 				->set_content_type('application/json')
 				->set_status_header(200)
 				->set_output(
 					"Task Added Sucessfully!"
+				);
+		} else {
+			syslog(LOG_ERR,"Error adding todo");
+			return $this->output
+				->set_content_type('application/json')
+				->set_status_header(500)
+				->set_output(
+					"Task could not be added!"
 				);
 		}
 	}
