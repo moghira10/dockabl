@@ -35,7 +35,7 @@ class Todo extends CI_Controller {
 
 	public function mark()
 	{
-		$params = $this->security->xss_clean(($this->uri->segment(3)));
+		$params = $this->security->xss_clean(($this->input->get('text')));
 		if(!empty($params)) {
 			$response = $this->db->query('DELETE FROM dock_todo WHERE `todo`="' . $params . '"');
 		}
@@ -58,7 +58,7 @@ class Todo extends CI_Controller {
 	}
 	public function add()
 	{
-		$params = $this->security->xss_clean(($this->uri->segment(3)));
+		$params = $this->security->xss_clean(($this->input->get('text')));
 		if(!empty($params)) {
 			$response = $this->db->query('INSERT INTO dock_todo SET `todo`="' . $params . '"');
 		}
