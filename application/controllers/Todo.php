@@ -35,7 +35,7 @@ class Todo extends CI_Controller {
 
 	public function mark()
 	{
-		$params = $this->security->xss_clean(($this->input->get('text')));
+		$params = $this->security->xss_clean(($this->input->post('text')));
 		if(!empty($params)) {
 			$response = $this->db->query('DELETE FROM dock_todo WHERE `todo`="' . $params . '"');
 		}
@@ -47,7 +47,7 @@ class Todo extends CI_Controller {
 					"Task Marked Sucessfully!"
 				);
 		} else {
-			syslog(LOG_ERR,"Error adding todo");
+			syslog(LOG_ERR,"Error marking todo");
 			return $this->output
 				->set_content_type('application/json')
 				->set_status_header(500)
@@ -58,7 +58,7 @@ class Todo extends CI_Controller {
 	}
 	public function add()
 	{
-		$params = $this->security->xss_clean(($this->input->get('text')));
+		$params = $this->security->xss_clean(($this->input->post('text')));
 		if(!empty($params)) {
 			$response = $this->db->query('INSERT INTO dock_todo SET `todo`="' . $params . '"');
 		}
